@@ -7,8 +7,8 @@
 #define BUZZER D5
 
 #define TOKEN "BBFF-Xwai0i5IWHQAd5QhZVZUldfuTmtVNj" // Ubidots TOKEN
-#define WIFINAME "TIGO-4A2c" // SSID
-#define WIFIPASS "79147194" // Wifi Pass
+#define WIFINAME "TIGO-4A2C" // SSID
+#define WIFIPASS "4NJ697500021" // Wifi Pass
 #define DEVICE_LABEL "wemosd1"  // Device label
 #define BPM_VARIABLE_LABEL "heartrate"
 #define TMP_VARIABLE_LABEL "temperature"
@@ -19,16 +19,14 @@ Ubidots client(TOKEN);
 
 void setup()
 {
+    Serial.begin(115200); // Serial port at 115200 kb/s
+
     // Ubidots setup
-    client.ubidotsSetBroker("industrial.api.ubidots.com"); // Sets the broker properly for the Industrial account
-    client.setDebug(false); // Pass a true or false bool value to activate debug messages
+    client.setDebug(true);
     client.wifiConnection(WIFINAME, WIFIPASS);
     client.begin(callback);
-    client.ubidotsSubscribe(DEVICE_LABEL, BPM_VARIABLE_LABEL); //Insert the dataSource and Variable's Labels
-    client.ubidotsSubscribe(DEVICE_LABEL, TMP_VARIABLE_LABEL); //Insert the dataSource and Variable's Labels
 
     pinMode(TMP, INPUT); // Temperature analog pin
-    Serial.begin(9600); // Serial port at 9600 kb/s
 
     pinMode(BUZZER, OUTPUT); // Buzzer pin
     noTone(BUZZER);
@@ -47,13 +45,6 @@ void setup()
 
 void loop()
 {
-    if(!client.connected())
-    {
-        client.reconnect();
-        client.ubidotsSubscribe(DEVICE_LABEL, BPM_VARIABLE_LABEL);
-        client.ubidotsSubscribe(DEVICE_LABEL, TMP_VARIABLE_LABEL);
-    }
-
     // Check finger presence
     long irValue = particleSensor.getIR();
 
@@ -68,6 +59,7 @@ void loop()
         if (avgBPM < 0)
         {
             Serial.println(" No finger?");
+            client.loop();
         }
         else
         {
@@ -79,9 +71,15 @@ void loop()
             Serial.print("average-temperature: ");
             Serial.println(avgTmp);
 
+            if(!client.connected())
+            {
+                client.reconnect();
+            }
+
             client.add(TMP_VARIABLE_LABEL, avgTmp);
             client.add(BPM_VARIABLE_LABEL, avgBPM);
             client.ubidotsPublish(DEVICE_LABEL);
+
             client.loop();
 
             buzz(avgBPM, avgTmp, 5000); // Sound for 5 seconds
