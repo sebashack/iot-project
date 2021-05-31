@@ -68,7 +68,7 @@ void loop()
         else
         {
             Serial.print("average-BPM: ");
-            Serial.print(avgBPM);
+            Serial.println(avgBPM);
 
             float avgTmp = readTemperature(10000); // Read temperature for 10 seconds.
 
