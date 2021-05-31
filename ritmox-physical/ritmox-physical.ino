@@ -7,8 +7,12 @@
 #define BUZZER D5
 
 #define TOKEN "BBFF-Xwai0i5IWHQAd5QhZVZUldfuTmtVNj" // Ubidots TOKEN
-#define WIFINAME "TIGO-4A2C" // SSID
-#define WIFIPASS "4NJ697500021" // Wifi Pass
+// #define WIFINAME "TIGO-4A2C" // SSID
+// #define WIFIPASS "4NJ697500021" // Wifi Pass
+
+#define WIFINAME "MBAeafit" // SSID
+#define WIFIPASS "FuturoHoy" // Wifi Pass
+
 #define DEVICE_LABEL "wemosd1"  // Device label
 #define BPM_VARIABLE_LABEL "heartrate"
 #define TMP_VARIABLE_LABEL "temperature"
@@ -29,12 +33,12 @@ void setup()
     pinMode(TMP, INPUT); // Temperature analog pin
 
     pinMode(BUZZER, OUTPUT); // Buzzer pin
-    noTone(BUZZER);
+    digitalWrite(BUZZER, LOW);
 
     // Initialize sensor
     if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Use default I2C port, 400kHz speed
     {
-        Serial.println("MAX30105 was not found. Please check wiring/power. ");
+        Serial.println("MAX30105 was not found. Please check wiring/power.");
         while (1);
     }
 
@@ -202,27 +206,25 @@ void buzz(float bpm, float tmp, unsigned int span)
     {
         if (normalIndicators)
         {
-            noTone(BUZZER);
+            digitalWrite(BUZZER, LOW);
             break;
         }
 
         if (abnormalBpm)
         {
             digitalWrite(BUZZER, HIGH);
-            tone(BUZZER, 261);
             freq -= 300;
         }
 
         if (highTmp)
         {
             digitalWrite(BUZZER, HIGH);
-            tone(BUZZER, 261);
             freq -= 300;
         }
 
         current = millis();
         delay(freq);
-        noTone(BUZZER);
+        digitalWrite(BUZZER, LOW);
         delay(freq);
         freq = MAX_FREQ;
     }
