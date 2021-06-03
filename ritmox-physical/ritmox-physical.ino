@@ -7,12 +7,8 @@
 #define BUZZER D5
 
 #define TOKEN "BBFF-Xwai0i5IWHQAd5QhZVZUldfuTmtVNj" // Ubidots TOKEN
-// #define WIFINAME "TIGO-4A2C" // SSID
-// #define WIFIPASS "4NJ697500021" // Wifi Pass
-
-#define WIFINAME "MBAeafit" // SSID
-#define WIFIPASS "FuturoHoy" // Wifi Pass
-
+#define WIFINAME "TIGO-4A2C" // SSID
+#define WIFIPASS "4NJ697500021" // Wifi Pass
 #define DEVICE_LABEL "wemosd1"  // Device label
 #define BPM_VARIABLE_LABEL "heartrate"
 #define TMP_VARIABLE_LABEL "temperature"
